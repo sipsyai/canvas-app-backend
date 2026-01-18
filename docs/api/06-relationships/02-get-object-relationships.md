@@ -16,6 +16,21 @@ Bir object'in tüm ilişkilerini getirir (kaynak veya hedef olarak).
 | object_id | string | Object ID |
 
 ## Response Format
+
+### Response Schema (Array of RelationshipResponse)
+| Alan | Tip | Açıklama |
+|------|-----|----------|
+| id | string | Relationship ID (rel_xxxxxxxx) |
+| name | string | Relationship name |
+| from_object_id | string | Source object ID |
+| to_object_id | string | Target object ID |
+| type | string | "1:N" (One-to-Many) or "N:N" (Many-to-Many) |
+| from_label | string \| null | Label shown on source object |
+| to_label | string \| null | Label shown on target object |
+| created_at | string (datetime) | Oluşturulma zamanı |
+| created_by | string | Oluşturan kullanıcı UUID (JSON'da string formatında) |
+
+### Success Response (200 OK)
 ```json
 [
   {
@@ -26,9 +41,15 @@ Bir object'in tüm ilişkilerini getirir (kaynak veya hedef olarak).
     "type": "1:N",
     "from_label": "Opportunities",
     "to_label": "Contact",
-    "created_at": "2026-01-18T10:00:00Z"
+    "created_at": "2026-01-18T10:00:00Z",
+    "created_by": "550e8400-e29b-41d4-a716-446655440000"
   }
 ]
+```
+
+**Empty Response (No relationships found):**
+```json
+[]
 ```
 
 ## Kod Akışı

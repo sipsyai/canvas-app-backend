@@ -32,6 +32,21 @@
 | to_label | string | Hayır | Hedef taraftaki label |
 
 ## Response Format
+
+### Response Schema (RelationshipResponse)
+| Alan | Tip | Açıklama |
+|------|-----|----------|
+| id | string | Relationship ID (rel_xxxxxxxx) |
+| name | string | Relationship name |
+| from_object_id | string | Source object ID |
+| to_object_id | string | Target object ID |
+| type | string | "1:N" (One-to-Many) or "N:N" (Many-to-Many) |
+| from_label | string \| null | Label shown on source object |
+| to_label | string \| null | Label shown on target object |
+| created_at | string (datetime) | Oluşturulma zamanı |
+| created_by | string | Oluşturan kullanıcı UUID (JSON'da string formatında) |
+
+### Success Response (201 Created)
 ```json
 {
   "id": "rel_a1b2c3d4",
@@ -43,6 +58,36 @@
   "to_label": "Contact",
   "created_by": "550e8400-e29b-41d4-a716-446655440000",
   "created_at": "2026-01-18T10:00:00Z"
+}
+```
+
+### Error Responses
+**422 Unprocessable Entity (missing required field):**
+```json
+{
+  "detail": [{
+    "type": "missing",
+    "loc": ["body", "name"],
+    "msg": "Field required"
+  }]
+}
+```
+
+**422 Unprocessable Entity (invalid type):**
+```json
+{
+  "detail": [{
+    "type": "string_pattern_mismatch",
+    "loc": ["body", "type"],
+    "msg": "String should match pattern '^(1:N|N:N)$'"
+  }]
+}
+```
+
+**401 Unauthorized:**
+```json
+{
+  "detail": "Not authenticated"
 }
 ```
 

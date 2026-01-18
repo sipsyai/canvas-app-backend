@@ -9,6 +9,24 @@
 - **Authentication:** JWT Token gerekli
 - **Response Status:** 204 No Content
 
+## Path Parameters
+| Parametre | Tip | Açıklama |
+|-----------|-----|----------|
+| relationship_id | string | Relationship ID (rel_xxxxxxxx) |
+
+## Response Format
+
+### Success Response (204 No Content)
+Response body: Empty
+
+### Error Responses
+**404 Not Found:**
+```json
+{
+  "detail": "Relationship not found"
+}
+```
+
 ## CASCADE Davranışı
 Relationship silindiğinde:
 - **relationship_records:** Bu ilişki üzerinden bağlı tüm record bağlantıları silinir
