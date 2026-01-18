@@ -1,5 +1,5 @@
 """Application Model - Application Containers (CRM, ITSM, etc.)"""
-from datetime import datetime
+from datetime import UTC, datetime
 from sqlalchemy import Column, DateTime, ForeignKey, String, Text
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from app.database import Base
@@ -20,6 +20,7 @@ class Application(Base):
 
     # Application Definition
     name = Column(String, nullable=False)
+    label = Column(String, nullable=True)
     description = Column(Text, nullable=True)
     icon = Column(String, nullable=True)
 
@@ -27,10 +28,10 @@ class Application(Base):
     config = Column(JSONB, nullable=False, server_default='{}')
 
     # Metadata
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
-    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC))
+    updated_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC), onupdate=lambda: datetime.now(UTC))
     created_by = Column(UUID(as_uuid=True), nullable=True)
-    published_at = Column(DateTime, nullable=True)
+    published_at = Column(DateTime(timezone=True), nullable=True)
 
     def __repr__(self) -> str:
         return f"<Application(id={self.id}, name={self.name})>"

@@ -1,5 +1,5 @@
 """Record Model - Dynamic Data Storage (JSONB Hybrid Pattern)"""
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Any
 from sqlalchemy import Column, DateTime, ForeignKey, String, Text
 from sqlalchemy.dialects.postgresql import UUID, JSONB
@@ -38,8 +38,8 @@ class Record(Base):
     primary_value = Column(Text, nullable=True, index=True)
 
     # Metadata
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow, index=True)
-    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC), index=True)
+    updated_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC), onupdate=lambda: datetime.now(UTC))
     created_by = Column(UUID(as_uuid=True), nullable=True)
     updated_by = Column(UUID(as_uuid=True), nullable=True)
 

@@ -1,5 +1,5 @@
 """Relationship Model - Relationship Definitions"""
-from datetime import datetime
+from datetime import UTC, datetime
 from sqlalchemy import Column, DateTime, ForeignKey, String, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship as db_relationship
@@ -33,7 +33,7 @@ class Relationship(Base):
     to_label = Column(Text, nullable=True)    # e.g., "Contact" on Opportunity page
 
     # Metadata
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    created_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC))
     created_by = Column(UUID(as_uuid=True), nullable=True)
 
     # Relationships

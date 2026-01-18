@@ -37,8 +37,8 @@ class Field(Base):
     is_custom = Column(Boolean, nullable=False, default=True)
 
     # Metadata
-    created_at = Column(DateTime, nullable=False, default=lambda: datetime.now(UTC))
-    updated_at = Column(DateTime, nullable=False, default=lambda: datetime.now(UTC), onupdate=lambda: datetime.now(UTC))
+    created_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC))
+    updated_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC), onupdate=lambda: datetime.now(UTC))
     created_by = Column(UUID(as_uuid=True), nullable=True)  # User ID (no FK constraint for flexibility)
 
     # Relationships

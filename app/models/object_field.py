@@ -1,5 +1,5 @@
 """ObjectField Model - N:N Mapping between Objects and Fields"""
-from datetime import datetime
+from datetime import UTC, datetime
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship as db_relationship
@@ -34,7 +34,7 @@ class ObjectField(Base):
     field_overrides = Column(JSONB, nullable=False, server_default='{}')
 
     # Metadata
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    created_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC))
 
     # Relationships
     object = db_relationship("Object", back_populates="object_fields")

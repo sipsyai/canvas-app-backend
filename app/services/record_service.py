@@ -74,6 +74,11 @@ class RecordService(BaseService[Record]):
 
         return records, total
 
+    async def get_records(self, db: AsyncSession, object_id: str) -> list[Record]:
+        """Alias for get_records_by_object (returns only records list)"""
+        records, _ = await self.get_records_by_object(db, object_id)
+        return records
+
     async def update_record(
         self,
         db: AsyncSession,

@@ -1,5 +1,5 @@
 """RelationshipRecord Model - N:N Junction Table"""
-from datetime import datetime
+from datetime import UTC, datetime
 from sqlalchemy import Column, DateTime, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship as db_relationship
@@ -28,7 +28,7 @@ class RelationshipRecord(Base):
     relationship_metadata = Column(JSONB, nullable=False, server_default='{}')
 
     # Metadata
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    created_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC))
     created_by = Column(UUID(as_uuid=True), nullable=True)
 
     # Relationships

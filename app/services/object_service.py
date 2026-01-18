@@ -36,6 +36,10 @@ class ObjectService(BaseService[Object]):
         )
         return list(result.scalars().all())
 
+    async def get_objects(self, db: AsyncSession, user_id: uuid.UUID) -> list[Object]:
+        """Alias for get_user_objects"""
+        return await self.get_user_objects(db, user_id)
+
     async def update_object(
         self,
         db: AsyncSession,
