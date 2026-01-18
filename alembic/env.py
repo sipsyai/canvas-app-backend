@@ -10,6 +10,12 @@ import asyncio
 from app.database import Base
 from app.config import settings
 
+# Import all models to ensure they're registered with Base
+from app.models import (
+    Field, Object, ObjectField, Record, Relationship,
+    RelationshipRecord, Application, User, TokenBlacklist
+)
+
 # Alembic Config object
 config = context.config
 

@@ -1,50 +1,22 @@
 """Authentication endpoints - Register, Login, Get User"""
 import uuid
-from datetime import timedelta
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
-from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.database import get_db
 from app.middleware.auth import get_current_user_id
-from app.utils.security import (
-    hash_password,
-    verify_password,
-    create_access_token,
-    ACCESS_TOKEN_EXPIRE_MINUTES,
-)
+from app.schemas import TokenResponse, UserRegister, UserResponse
+from app.services import auth_service
+from app.utils.rate_limit import limiter
 
 router = APIRouter()
 
 
-# Schemas
-class UserRegister(BaseModel):
-    email: EmailStr = Field(..., description="User email")
-    password: str = Field(..., min_length=8, description="Password (min 8 chars)")
-    full_name: str = Field(..., min_length=1, description="Full name")
-
-
-class UserResponse(BaseModel):
-    id: str
-    email: str
-    full_name: str
-
-    model_config = {"from_attributes": True}
-
-
-class TokenResponse(BaseModel):
-    access_token: str
-    token_type: str = "bearer"
-    expires_in: int = ACCESS_TOKEN_EXPIRE_MINUTES * 60  # seconds
-
-
-# Mock user storage (REPLACE with real database in production!)
-# For MVP, use in-memory dict. For production, use auth.users table.
-MOCK_USERS: dict = {}
-
-
 @router.post("/register", response_model=UserResponse, status_code=201)
+@limiter.limit("5/minute")  # Max 5 registrations per minute per IP
 async def register_user(
+    request: Request,
     user_in: UserRegister,
     db: AsyncSession = Depends(get_db),
 ):
@@ -60,36 +32,16 @@ async def register_user(
     }
     ```
 
-    TODO: Store user in auth.users table (Supabase or local PostgreSQL)
+    Stores user in PostgreSQL database with bcrypt-hashed password.
     """
-    # Check if user already exists
-    if user_in.email in MOCK_USERS:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email already registered",
-        )
-
-    # Hash password
-    hashed_password = hash_password(user_in.password)
-
-    # Create user (mock - replace with database)
-    user_id = str(uuid.uuid4())
-    MOCK_USERS[user_in.email] = {
-        "id": user_id,
-        "email": user_in.email,
-        "full_name": user_in.full_name,
-        "hashed_password": hashed_password,
-    }
-
-    return UserResponse(
-        id=user_id,
-        email=user_in.email,
-        full_name=user_in.full_name,
-    )
+    user = await auth_service.register_user(db, user_in)
+    return user
 
 
 @router.post("/login", response_model=TokenResponse)
+@limiter.limit("10/minute")  # Max 10 login attempts per minute per IP
 async def login_user(
+    request: Request,
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: AsyncSession = Depends(get_db),
 ):
@@ -101,29 +53,19 @@ async def login_user(
     - password: User password
 
     Returns JWT token with 1-hour expiration.
+    Verifies user credentials against PostgreSQL database.
     """
-    # Get user (mock - replace with database query)
-    user = MOCK_USERS.get(form_data.username)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
-        )
-
-    # Verify password
-    if not verify_password(form_data.password, user["hashed_password"]):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
-        )
+    # Authenticate user (verifies email, password, and active status)
+    user = await auth_service.authenticate_user(db, form_data.username, form_data.password)
 
     # Create JWT token
-    access_token = create_access_token(
-        data={"sub": user["id"], "email": user["email"]},
-        expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
-    )
+    token_data = auth_service.create_token_for_user(user)
 
-    return TokenResponse(access_token=access_token)
+    return TokenResponse(
+        access_token=token_data["access_token"],
+        token_type=token_data["token_type"],
+        expires_in=token_data["expires_in"],
+    )
 
 
 @router.get("/me", response_model=UserResponse)
@@ -135,12 +77,9 @@ async def get_current_user(
     Get current authenticated user.
 
     Requires "Authorization: Bearer <token>" header.
+    Fetches user data from PostgreSQL database.
     """
-    # Find user by ID (mock - replace with database query)
-    user = next(
-        (u for u in MOCK_USERS.values() if u["id"] == str(user_id)),
-        None,
-    )
+    user = await auth_service.get_user_by_id(db, user_id)
 
     if not user:
         raise HTTPException(
@@ -148,8 +87,28 @@ async def get_current_user(
             detail="User not found",
         )
 
-    return UserResponse(
-        id=user["id"],
-        email=user["email"],
-        full_name=user["full_name"],
-    )
+    return user
+
+
+@router.post("/logout", status_code=204)
+async def logout_user(
+    request: Request,
+    user_id: uuid.UUID = Depends(get_current_user_id),
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Logout user by blacklisting their current JWT token.
+
+    Requires "Authorization: Bearer <token>" header.
+    The token will be added to the blacklist and cannot be used again.
+    """
+    # Extract token from Authorization header
+    from fastapi.security import HTTPBearer
+    security = HTTPBearer()
+    credentials = await security(request)
+    token = credentials.credentials
+
+    # Blacklist the token
+    await auth_service.blacklist_token(db, token, user_id)
+
+    return None  # 204 No Content

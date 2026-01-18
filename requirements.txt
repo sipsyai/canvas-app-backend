@@ -18,6 +18,8 @@ python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 bcrypt==4.1.3  # Pin to 4.x for passlib compatibility
 supabase==2.3.4
+slowapi==0.1.9  # Rate limiting
+redis==5.0.1  # Token blacklist and caching
 
 # Testing
 pytest==7.4.3

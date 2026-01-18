@@ -1,5 +1,6 @@
 """Pydantic Schemas for Request/Response Validation"""
 from app.schemas.application import ApplicationCreate, ApplicationResponse, ApplicationUpdate
+from app.schemas.auth import TokenResponse, UserRegister, UserResponse
 from app.schemas.field import FieldCreate, FieldResponse, FieldUpdate
 from app.schemas.object import ObjectCreate, ObjectResponse, ObjectUpdate
 from app.schemas.object_field import ObjectFieldCreate, ObjectFieldResponse, ObjectFieldUpdate
@@ -34,4 +35,7 @@ __all__ = [
     "ApplicationCreate",
     "ApplicationUpdate",
     "ApplicationResponse",
+    "UserRegister",
+    "UserResponse",
+    "TokenResponse",
 ]

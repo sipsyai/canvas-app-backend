@@ -1,5 +1,6 @@
 """Business Services Layer"""
 from app.services.application_service import ApplicationService, application_service
+from app.services.auth_service import AuthService, auth_service
 from app.services.field_service import FieldService, field_service
 from app.services.object_field_service import ObjectFieldService, object_field_service
 from app.services.object_service import ObjectService, object_service
@@ -25,4 +26,6 @@ __all__ = [
     "relationship_record_service",
     "ApplicationService",
     "application_service",
+    "AuthService",
+    "auth_service",
 ]

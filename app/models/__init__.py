@@ -6,6 +6,8 @@ from app.models.record import Record
 from app.models.relationship import Relationship
 from app.models.relationship_record import RelationshipRecord
 from app.models.application import Application
+from app.models.user import User
+from app.models.token_blacklist import TokenBlacklist
 
 __all__ = [
     "Field",
@@ -15,4 +17,6 @@ __all__ = [
     "Relationship",
     "RelationshipRecord",
     "Application",
+    "User",
+    "TokenBlacklist",
 ]
