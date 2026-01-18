@@ -16,6 +16,21 @@ Bir object'e bağlı tüm field'ları listeler (display_order sırasına göre).
 | object_id | string | Evet | Object ID |
 
 ## Response Format
+
+### Response Schema (Array of ObjectFieldResponse)
+| Alan | Tip | Açıklama |
+|------|-----|----------|
+| id | string | Object-field ID (ofd_xxxxxxxx) |
+| object_id | string | Object ID (obj_xxxxxxxx) |
+| field_id | string | Field ID (fld_xxxxxxxx) |
+| display_order | integer | Görüntüleme sırası (0+) |
+| is_required | boolean | Zorunlu mu? |
+| is_visible | boolean | Görünür mü? |
+| is_readonly | boolean | Salt okunur mu? |
+| field_overrides | object | Field-specific config overrides |
+| created_at | string (datetime) | Oluşturulma zamanı |
+
+### Success Response (200 OK)
 ```json
 [
   {
@@ -26,7 +41,8 @@ Bir object'e bağlı tüm field'ları listeler (display_order sırasına göre).
     "is_required": true,
     "is_visible": true,
     "is_readonly": false,
-    "field_overrides": {}
+    "field_overrides": {},
+    "created_at": "2026-01-18T10:00:00Z"
   },
   {
     "id": "ofd_email",
@@ -36,9 +52,15 @@ Bir object'e bağlı tüm field'ları listeler (display_order sırasına göre).
     "is_required": true,
     "is_visible": true,
     "is_readonly": false,
-    "field_overrides": {}
+    "field_overrides": {},
+    "created_at": "2026-01-18T10:01:00Z"
   }
 ]
+```
+
+**Empty Response (No fields attached to object):**
+```json
+[]
 ```
 
 ## Kod Akışı

@@ -8,6 +8,8 @@ from app.services import object_field_service
 
 router = APIRouter()
 
+# Support both /api/object-fields and /api/object-fields/ (with and without trailing slash)
+@router.post("", response_model=ObjectFieldResponse, status_code=201)
 @router.post("/", response_model=ObjectFieldResponse, status_code=201)
 async def create_object_field(
     object_field_in: ObjectFieldCreate,
@@ -31,6 +33,7 @@ async def create_object_field(
     object_field = await object_field_service.create_object_field(db, object_field_in, user_id)
     return object_field
 
+@router.get("", response_model=list[ObjectFieldResponse])
 @router.get("/", response_model=list[ObjectFieldResponse])
 async def list_object_fields(
     object_id: str = Query(..., description="Object ID to filter fields"),
@@ -45,6 +48,7 @@ async def list_object_fields(
     return object_fields
 
 @router.get("/{object_field_id}", response_model=ObjectFieldResponse)
+@router.get("/{object_field_id}/", response_model=ObjectFieldResponse)
 async def get_object_field(
     object_field_id: str,
     db: AsyncSession = Depends(get_db),
@@ -56,6 +60,7 @@ async def get_object_field(
     return object_field
 
 @router.patch("/{object_field_id}", response_model=ObjectFieldResponse)
+@router.patch("/{object_field_id}/", response_model=ObjectFieldResponse)
 async def update_object_field(
     object_field_id: str,
     object_field_in: ObjectFieldUpdate,
@@ -68,6 +73,7 @@ async def update_object_field(
     return object_field
 
 @router.delete("/{object_field_id}", status_code=204)
+@router.delete("/{object_field_id}/", status_code=204)
 async def delete_object_field(
     object_field_id: str,
     db: AsyncSession = Depends(get_db),

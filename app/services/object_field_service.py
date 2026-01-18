@@ -24,7 +24,7 @@ class ObjectFieldService(BaseService[ObjectField]):
         """Create new object field with auto-generated ID"""
         object_field_data = object_field_in.model_dump()
         object_field_data["id"] = f"ofd_{uuid.uuid4().hex[:8]}"
-        object_field_data["created_by"] = user_id
+        # Note: ObjectField model doesn't have created_by column (it's a mapping table)
         return await self.create(db, object_field_data)
 
     async def get_fields_for_object(

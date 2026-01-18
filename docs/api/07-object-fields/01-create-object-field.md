@@ -33,6 +33,21 @@ Field'ı object'e bağlar (attach eder).
 | field_overrides | object | Hayır | {} | Field-specific config |
 
 ## Response Format
+
+### Response Schema (ObjectFieldResponse)
+| Alan | Tip | Açıklama |
+|------|-----|----------|
+| id | string | Object-field ID (ofd_xxxxxxxx) |
+| object_id | string | Object ID (obj_xxxxxxxx) |
+| field_id | string | Field ID (fld_xxxxxxxx) |
+| display_order | integer | Görüntüleme sırası (0+) |
+| is_required | boolean | Zorunlu mu? |
+| is_visible | boolean | Görünür mü? |
+| is_readonly | boolean | Salt okunur mu? |
+| field_overrides | object | Field-specific config overrides |
+| created_at | string (datetime) | Oluşturulma zamanı |
+
+### Success Response (201 Created)
 ```json
 {
   "id": "ofd_a1b2c3d4",
@@ -47,6 +62,26 @@ Field'ı object'e bağlar (attach eder).
 }
 ```
 
+### Error Responses
+
+**422 Unprocessable Entity (missing required field):**
+```json
+{
+  "detail": [{
+    "type": "missing",
+    "loc": ["body", "object_id"],
+    "msg": "Field required"
+  }]
+}
+```
+
+**401 Unauthorized:**
+```json
+{
+  "detail": "Not authenticated"
+}
+```
+
 ## Kod Akışı
 **Service:** `app/services/object_field_service.py`
 ```python
@@ -55,7 +90,7 @@ async def create_object_field(
 ) -> ObjectField:
     object_field_data = object_field_in.model_dump()
     object_field_data["id"] = f"ofd_{uuid.uuid4().hex[:8]}"
-    object_field_data["created_by"] = user_id
+    # Note: ObjectField model doesn't have created_by column (it's a mapping table)
     return await self.create(db, object_field_data)
 ```
 

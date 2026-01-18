@@ -9,14 +9,15 @@ Field'ı object'ten kaldırır (bağlantıyı siler). Field kendisi silinmez, sa
 - **Authentication:** JWT Token gerekli
 - **Response Status:** 204 No Content
 
-## NOT
-Field silinmez, sadece object'ten kaldırılır. Field hala field'lar tablosunda kalır ve başka object'lerde kullanılabilir.
+## Path Parameters
+| Parametre | Tip | Açıklama |
+|-----------|-----|----------|
+| object_field_id | string | Object-field ID (ofd_xxxxxxxx) |
 
-## Kullanım
-```bash
-curl -X DELETE http://localhost:8000/api/object-fields/ofd_a1b2c3d4 \
-  -H "Authorization: Bearer TOKEN"
-```
+## Response Format
+
+### Success Response (204 No Content)
+Response body: Empty
 
 ### Error Response
 **404 Not Found:**
@@ -24,4 +25,13 @@ curl -X DELETE http://localhost:8000/api/object-fields/ofd_a1b2c3d4 \
 {
   "detail": "ObjectField not found"
 }
+```
+
+## NOT
+Field silinmez, sadece object'ten kaldırılır. Field hala field'lar tablosunda kalır ve başka object'lerde kullanılabilir.
+
+## Kullanım
+```bash
+curl -X DELETE http://localhost:8000/api/object-fields/ofd_a1b2c3d4 \
+  -H "Authorization: Bearer TOKEN"
 ```
