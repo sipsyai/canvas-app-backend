@@ -8,6 +8,8 @@ from app.services import relationship_record_service
 
 router = APIRouter()
 
+# Support both /api/relationship-records and /api/relationship-records/ (with and without trailing slash)
+@router.post("", response_model=RelationshipRecordResponse, status_code=201)
 @router.post("/", response_model=RelationshipRecordResponse, status_code=201)
 async def create_relationship_record(
     link_in: RelationshipRecordCreate,
@@ -31,6 +33,7 @@ async def create_relationship_record(
     return link
 
 @router.get("/records/{record_id}/related", response_model=list[RelationshipRecordResponse])
+@router.get("/records/{record_id}/related/", response_model=list[RelationshipRecordResponse])
 async def get_related_records(
     record_id: str,
     relationship_id: str = Query(..., description="Relationship ID"),
@@ -43,6 +46,7 @@ async def get_related_records(
     return links
 
 @router.delete("/{link_id}", status_code=204)
+@router.delete("/{link_id}/", status_code=204)
 async def delete_relationship_record(
     link_id: str,
     db: AsyncSession = Depends(get_db),

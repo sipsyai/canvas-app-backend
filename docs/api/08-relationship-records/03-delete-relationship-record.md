@@ -9,20 +9,29 @@
 - **Authentication:** JWT Token gerekli
 - **Response Status:** 204 No Content
 
-## Request Format
-### Path Parameters
+## Path Parameters
 | Parametre | Tip | Açıklama |
 |-----------|-----|----------|
-| link_id | string | Link ID (örn: lnk_a1b2c3d4) |
+| link_id | string | Link ID (lnk_xxxxxxxx) |
 
 ## Response Format
-**204 No Content** - Response body yok
 
-### Error Response
+### Success Response (204 No Content)
+Response body: Empty
+
+### Error Responses
+
 **404 Not Found:**
 ```json
 {
   "detail": "Link not found"
+}
+```
+
+**401 Unauthorized:**
+```json
+{
+  "detail": "Not authenticated"
 }
 ```
 

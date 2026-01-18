@@ -31,6 +31,19 @@
 | relationship_metadata | object | Hayır | İlişki metadata (role, notes vb.) |
 
 ## Response Format
+
+### Response Schema (RelationshipRecordResponse)
+| Alan | Tip | Açıklama |
+|------|-----|----------|
+| id | string | Link ID (lnk_xxxxxxxx) |
+| relationship_id | string | Relationship ID (rel_xxxxxxxx) |
+| from_record_id | string | Source record ID (rec_xxxxxxxx) |
+| to_record_id | string | Target record ID (rec_xxxxxxxx) |
+| relationship_metadata | object | İlişkiye özel metadata (role, notes vb.) |
+| created_at | string (datetime) | Oluşturulma zamanı |
+| created_by | string | Oluşturan kullanıcı UUID |
+
+### Success Response (201 Created)
 ```json
 {
   "id": "lnk_a1b2c3d4",
@@ -43,6 +56,26 @@
   },
   "created_by": "550e8400-e29b-41d4-a716-446655440000",
   "created_at": "2026-01-18T10:00:00Z"
+}
+```
+
+### Error Responses
+
+**422 Unprocessable Entity (missing required field):**
+```json
+{
+  "detail": [{
+    "type": "missing",
+    "loc": ["body", "relationship_id"],
+    "msg": "Field required"
+  }]
+}
+```
+
+**401 Unauthorized:**
+```json
+{
+  "detail": "Not authenticated"
 }
 ```
 

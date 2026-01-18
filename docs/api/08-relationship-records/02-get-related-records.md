@@ -27,6 +27,19 @@ GET /api/relationship-records/records/rec_ali/related?relationship_id=rel_contac
 ```
 
 ## Response Format
+
+### Response Schema (Array of RelationshipRecordResponse)
+| Alan | Tip | Açıklama |
+|------|-----|----------|
+| id | string | Link ID (lnk_xxxxxxxx) |
+| relationship_id | string | Relationship ID (rel_xxxxxxxx) |
+| from_record_id | string | Source record ID (rec_xxxxxxxx) |
+| to_record_id | string | Target record ID (rec_xxxxxxxx) |
+| relationship_metadata | object | İlişkiye özel metadata |
+| created_at | string (datetime) | Oluşturulma zamanı |
+| created_by | string | Oluşturan kullanıcı UUID |
+
+### Success Response (200 OK)
 ```json
 [
   {
@@ -37,7 +50,8 @@ GET /api/relationship-records/records/rec_ali/related?relationship_id=rel_contac
     "relationship_metadata": {
       "role": "Decision Maker"
     },
-    "created_at": "2026-01-18T10:00:00Z"
+    "created_at": "2026-01-18T10:00:00Z",
+    "created_by": "550e8400-e29b-41d4-a716-446655440000"
   },
   {
     "id": "lnk_b2c3d4e5",
@@ -47,9 +61,28 @@ GET /api/relationship-records/records/rec_ali/related?relationship_id=rel_contac
     "relationship_metadata": {
       "role": "Influencer"
     },
-    "created_at": "2026-01-18T11:00:00Z"
+    "created_at": "2026-01-18T11:00:00Z",
+    "created_by": "550e8400-e29b-41d4-a716-446655440000"
   }
 ]
+```
+
+**Empty Response (No links found):**
+```json
+[]
+```
+
+### Error Responses
+
+**422 Unprocessable Entity (missing relationship_id):**
+```json
+{
+  "detail": [{
+    "type": "missing",
+    "loc": ["query", "relationship_id"],
+    "msg": "Field required"
+  }]
+}
 ```
 
 ## Kod Akışı
