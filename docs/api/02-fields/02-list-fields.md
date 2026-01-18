@@ -95,7 +95,7 @@ GET /api/fields?category=Contact Info&is_system=false
 | is_system_field | boolean | Sistem field'ı mı? |
 | is_custom | boolean | Custom field mi? |
 | config | object | Field konfigürasyonu |
-| created_by | string (UUID) \| null | Oluşturan kullanıcı (sistem field'larında null) |
+| created_by | string \| null | Oluşturan kullanıcı UUID (sistem field'larında null, JSON'da string formatında) |
 | created_at | string (datetime) | Oluşturulma zamanı |
 | updated_at | string (datetime) | Son güncelleme zamanı |
 

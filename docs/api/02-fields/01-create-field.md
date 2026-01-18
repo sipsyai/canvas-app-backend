@@ -80,7 +80,7 @@ Yeni bir custom field oluşturur. Field'lar veri alanlarını temsil eder (email
 | is_system_field | boolean | Sistem field'ı mı? (created_at, owner vb.) |
 | is_custom | boolean | Custom field mi? |
 | config | object | Field konfigürasyonu |
-| created_by | string (UUID) | Oluşturan kullanıcı ID |
+| created_by | string | Oluşturan kullanıcı UUID (JSON'da string formatında) |
 | created_at | string (datetime) | Oluşturulma zamanı |
 | updated_at | string (datetime) | Son güncelleme zamanı |
 

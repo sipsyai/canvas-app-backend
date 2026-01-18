@@ -8,6 +8,8 @@ from app.services import field_service
 
 router = APIRouter()
 
+# Support both /api/fields and /api/fields/ (with and without trailing slash)
+@router.post("", response_model=FieldResponse, status_code=201)
 @router.post("/", response_model=FieldResponse, status_code=201)
 async def create_field(
     field_in: FieldCreate,
@@ -33,6 +35,7 @@ async def create_field(
     field = await field_service.create_field(db, field_in, user_id)
     return field
 
+@router.get("", response_model=list[FieldResponse])
 @router.get("/", response_model=list[FieldResponse])
 async def list_fields(
     category: str | None = Query(None, description="Filter by category"),

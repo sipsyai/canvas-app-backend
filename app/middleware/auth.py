@@ -9,11 +9,12 @@ from app.utils.security import decode_access_token
 
 
 # HTTP Bearer scheme (extracts token from "Authorization: Bearer <token>" header)
-security = HTTPBearer()
+# auto_error=False prevents automatic 403, we handle 401 manually
+security = HTTPBearer(auto_error=False)
 
 
 async def get_current_user_id(
-    credentials: HTTPAuthorizationCredentials = Depends(security),
+    credentials: HTTPAuthorizationCredentials | None = Depends(security),
     db: AsyncSession = Depends(get_db),
 ) -> uuid.UUID:
     """
@@ -28,6 +29,14 @@ async def get_current_user_id(
     Raises:
         HTTPException 401 if token is invalid/expired/blacklisted
     """
+    # Check if credentials were provided
+    if credentials is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
     token = credentials.credentials
     payload = decode_access_token(token)
 
