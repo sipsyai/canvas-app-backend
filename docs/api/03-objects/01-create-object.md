@@ -47,6 +47,23 @@ Yeni bir object (veri tablosu) oluşturur. Object'ler Contact, Company, Opportun
 
 ## Response Format
 
+### Response Schema (ObjectResponse)
+| Alan | Tip | Açıklama |
+|------|-----|----------|
+| id | string | Otomatik oluşturulan object ID (obj_xxxxxxxx) |
+| name | string | Object adı |
+| label | string | Görünen ad |
+| plural_name | string | Çoğul isim |
+| description | string \| null | Object açıklaması |
+| icon | string \| null | Icon (emoji veya class) |
+| is_custom | boolean | Custom object mi? |
+| is_global | boolean | Global object mi? |
+| views | object | View konfigürasyonları |
+| permissions | object | CRUD izinleri |
+| created_by | string | Oluşturan kullanıcı UUID (JSON'da string formatında) |
+| created_at | string (datetime) | Oluşturulma zamanı |
+| updated_at | string (datetime) | Son güncelleme zamanı |
+
 ### Success Response (201 Created)
 ```json
 {

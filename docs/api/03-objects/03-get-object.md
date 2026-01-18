@@ -16,6 +16,25 @@ Belirtilen ID'ye sahip object'ın detaylarını getirir.
 | object_id | string | Object ID (örn: obj_contact) |
 
 ## Response Format
+
+### Response Schema (ObjectResponse)
+| Alan | Tip | Açıklama |
+|------|-----|----------|
+| id | string | Object ID |
+| name | string | Object adı |
+| label | string | Görünen ad |
+| plural_name | string | Çoğul isim |
+| description | string \| null | Object açıklaması |
+| icon | string \| null | Icon |
+| is_custom | boolean | Custom object mi? |
+| is_global | boolean | Global object mi? |
+| views | object | View konfigürasyonları |
+| permissions | object | CRUD izinleri |
+| created_by | string | Oluşturan kullanıcı UUID (JSON'da string formatında) |
+| created_at | string (datetime) | Oluşturulma zamanı |
+| updated_at | string (datetime) | Son güncelleme zamanı |
+
+### Success Response (200 OK)
 ```json
 {
   "id": "obj_contact",

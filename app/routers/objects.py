@@ -8,6 +8,8 @@ from app.services import object_service
 
 router = APIRouter()
 
+# Support both /api/objects and /api/objects/ (with and without trailing slash)
+@router.post("", response_model=ObjectResponse, status_code=201)
 @router.post("/", response_model=ObjectResponse, status_code=201)
 async def create_object(
     object_in: ObjectCreate,
@@ -31,6 +33,7 @@ async def create_object(
     obj = await object_service.create_object(db, object_in, user_id)
     return obj
 
+@router.get("", response_model=list[ObjectResponse])
 @router.get("/", response_model=list[ObjectResponse])
 async def list_objects(
     db: AsyncSession = Depends(get_db),
