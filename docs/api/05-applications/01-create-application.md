@@ -10,6 +10,17 @@ Yeni uygulama oluşturur (CRM, ITSM vb.).
 - **Response Status:** 201 Created
 
 ## Request Format
+
+### Request Schema (ApplicationCreate)
+| Alan | Tip | Zorunlu | Açıklama |
+|------|-----|---------|----------|
+| name | string | Evet | Application name (1-255 chars) |
+| label | string | Hayır | Display label |
+| description | string | Hayır | Application description |
+| icon | string | Hayır | Icon (emoji or class name) |
+| config | object | Hayır | Application configuration (default: {}) |
+
+### Request Body Example
 ```json
 {
   "name": "CRM",
@@ -23,6 +34,22 @@ Yeni uygulama oluşturur (CRM, ITSM vb.).
 ```
 
 ## Response Format
+
+### Response Schema (ApplicationResponse)
+| Alan | Tip | Açıklama |
+|------|-----|----------|
+| id | string | Application ID (app_xxxxxxxx) |
+| name | string | Application name |
+| label | string \| null | Application label (display name) |
+| description | string \| null | Application description |
+| icon | string \| null | Icon (emoji or class name) |
+| config | object | Application configuration (JSONB) |
+| created_at | string (datetime) | Oluşturulma zamanı |
+| updated_at | string (datetime) | Son güncelleme zamanı |
+| created_by | string | Oluşturan kullanıcı UUID (JSON'da string formatında) |
+| published_at | string (datetime) \| null | Yayınlanma zamanı (null = draft) |
+
+### Success Response (201 Created)
 ```json
 {
   "id": "app_a1b2c3d4",

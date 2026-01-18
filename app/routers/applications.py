@@ -8,6 +8,8 @@ from app.services import application_service
 
 router = APIRouter()
 
+# Support both /api/applications and /api/applications/ (with and without trailing slash)
+@router.post("", response_model=ApplicationResponse, status_code=201)
 @router.post("/", response_model=ApplicationResponse, status_code=201)
 async def create_application(
     app_in: ApplicationCreate,
@@ -33,6 +35,7 @@ async def create_application(
     app = await application_service.create_application(db, app_in, user_id)
     return app
 
+@router.get("", response_model=list[ApplicationResponse])
 @router.get("/", response_model=list[ApplicationResponse])
 async def list_applications(
     skip: int = 0,
@@ -44,6 +47,7 @@ async def list_applications(
     return apps
 
 @router.post("/{app_id}/publish", response_model=ApplicationResponse)
+@router.post("/{app_id}/publish/", response_model=ApplicationResponse)
 async def publish_application(
     app_id: str,
     db: AsyncSession = Depends(get_db),
@@ -55,6 +59,7 @@ async def publish_application(
     return app
 
 @router.delete("/{app_id}", status_code=204)
+@router.delete("/{app_id}/", status_code=204)
 async def delete_application(
     app_id: str,
     db: AsyncSession = Depends(get_db),
