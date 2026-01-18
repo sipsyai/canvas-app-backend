@@ -1,5 +1,5 @@
 """Field API Endpoints"""
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.middleware.auth import get_current_user_id
@@ -35,17 +35,22 @@ async def create_field(
 
 @router.get("/", response_model=list[FieldResponse])
 async def list_fields(
+    category: str | None = Query(None, description="Filter by category"),
+    is_system: bool | None = Query(None, description="Filter system fields"),
     db: AsyncSession = Depends(get_db),
     user_id: str = Depends(get_current_user_id),
 ):
     """
-    Get all fields (global + user's custom fields).
+    Get all fields (global + user's custom fields) with optional filters.
 
     Returns both system fields (Created By, Owner, etc.) and user's custom fields.
+
+    Query Parameters:
+    - category: Filter by field category (e.g., "Contact Info", "Business", "System")
+    - is_system: Filter system fields (true = only system fields, false = only non-system)
     """
-    global_fields = await field_service.get_global_fields(db)
-    user_fields = await field_service.get_user_fields(db, user_id)
-    return global_fields + user_fields
+    fields = await field_service.get_fields(db, user_id, category, is_system)
+    return fields
 
 @router.get("/{field_id}", response_model=FieldResponse)
 async def get_field(

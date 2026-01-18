@@ -1,7 +1,7 @@
 """Field Service - Field CRUD operations"""
 import uuid
 
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import Field
@@ -26,6 +26,32 @@ class FieldService(BaseService[Field]):
         field_data["id"] = f"fld_{uuid.uuid4().hex[:8]}"
         field_data["created_by"] = user_id
         return await self.create(db, field_data)
+
+    async def get_fields(
+        self,
+        db: AsyncSession,
+        user_id: uuid.UUID,
+        category: str | None = None,
+        is_system: bool | None = None,
+    ) -> list[Field]:
+        """Get fields (global + user's own), optionally filter by category and system"""
+        query = select(Field).where(
+            or_(
+                Field.is_global == True,
+                Field.created_by == user_id
+            )
+        )
+
+        # Filter by category if provided
+        if category:
+            query = query.where(Field.category == category)
+
+        # Filter by system fields if provided
+        if is_system is not None:
+            query = query.where(Field.is_system_field == is_system)
+
+        result = await db.execute(query)
+        return list(result.scalars().all())
 
     async def get_global_fields(self, db: AsyncSession) -> list[Field]:
         """Get all global (system) fields"""

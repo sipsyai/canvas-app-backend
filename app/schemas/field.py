@@ -12,6 +12,7 @@ class FieldBase(BaseModel):
     type: str = Field(..., description="Field type: text, number, email, date, select, etc.")
     description: str | None = Field(None, description="Field description")
     config: dict = Field(default_factory=dict, description="Field configuration (validation, options, etc.)")
+    category: str | None = Field(None, description="Field category (Contact Info, Business, System, etc.)")
 
 
 class FieldCreate(FieldBase):
@@ -26,14 +27,17 @@ class FieldUpdate(BaseModel):
     type: str | None = None
     description: str | None = None
     config: dict | None = None
+    category: str | None = None
 
 
 class FieldResponse(FieldBase):
     """Schema for field response"""
     id: str
     is_global: bool
+    is_system_field: bool
     is_custom: bool
     created_at: datetime
+    updated_at: datetime
     created_by: uuid.UUID | None = None
 
     model_config = {"from_attributes": True}  # Pydantic 2.x (was orm_mode in v1)
