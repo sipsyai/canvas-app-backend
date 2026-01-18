@@ -1,7 +1,7 @@
 """Object Model - Object Definitions (Contact, Company, etc.)"""
-from datetime import datetime
+from datetime import UTC, datetime
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, String, Text
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import relationship as db_relationship
 from app.database import Base
 
@@ -24,7 +24,7 @@ class Object(Base):
     # Object Definition
     name = Column(String, nullable=False)
     label = Column(String, nullable=False)
-    plural_label = Column(String, nullable=False)
+    plural_name = Column(String, nullable=False)
     description = Column(Text, nullable=True)
     icon = Column(String, nullable=True)  # Emoji or icon class
 
@@ -32,9 +32,23 @@ class Object(Base):
     is_custom = Column(Boolean, nullable=False, default=True)
     is_global = Column(Boolean, nullable=False, default=False)
 
+    # Views configuration (TableView, FormView, Kanban, Calendar)
+    views = Column(
+        JSONB,
+        nullable=False,
+        server_default='{"forms": [], "tables": [], "kanbans": [], "calendars": []}'
+    )
+
+    # Permissions configuration (CRUD roles)
+    permissions = Column(
+        JSONB,
+        nullable=False,
+        server_default='{"create": ["all"], "read": ["all"], "update": ["all"], "delete": ["all"]}'
+    )
+
     # Metadata
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
-    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, nullable=False, default=lambda: datetime.now(UTC))
+    updated_at = Column(DateTime, nullable=False, default=lambda: datetime.now(UTC), onupdate=lambda: datetime.now(UTC))
     created_by = Column(UUID(as_uuid=True), nullable=True)
 
     # Relationships
