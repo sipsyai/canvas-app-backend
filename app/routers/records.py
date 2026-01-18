@@ -8,6 +8,8 @@ from app.services import record_service
 
 router = APIRouter()
 
+# Support both /api/records and /api/records/ (with and without trailing slash)
+@router.post("", response_model=RecordResponse, status_code=201)
 @router.post("/", response_model=RecordResponse, status_code=201)
 async def create_record(
     record_in: RecordCreate,
@@ -35,6 +37,7 @@ async def create_record(
     record = await record_service.create_record(db, record_in, user_id)
     return record
 
+@router.get("", response_model=RecordListResponse)
 @router.get("/", response_model=RecordListResponse)
 async def list_records(
     object_id: str = Query(..., description="Object ID to filter records"),
@@ -57,6 +60,22 @@ async def list_records(
         page_size=page_size,
         records=records,
     )
+
+# IMPORTANT: Define /search BEFORE /{record_id} to avoid route conflict
+@router.get("/search", response_model=list[RecordResponse])
+@router.get("/search/", response_model=list[RecordResponse])
+async def search_records(
+    object_id: str = Query(..., description="Object ID"),
+    q: str = Query(..., min_length=1, description="Search term"),
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Search records by primary_value (fast text search).
+
+    Example: GET /api/records/search?object_id=obj_contact&q=Ali
+    """
+    records = await record_service.search_records(db, object_id, q)
+    return records
 
 @router.get("/{record_id}", response_model=RecordResponse)
 async def get_record(
@@ -105,17 +124,3 @@ async def delete_record(
     if not deleted:
         raise HTTPException(status_code=404, detail="Record not found")
     return None
-
-@router.get("/search/", response_model=list[RecordResponse])
-async def search_records(
-    object_id: str = Query(..., description="Object ID"),
-    q: str = Query(..., min_length=1, description="Search term"),
-    db: AsyncSession = Depends(get_db),
-):
-    """
-    Search records by primary_value (fast text search).
-
-    Example: GET /api/records/search?object_id=obj_contact&q=Ali
-    """
-    records = await record_service.search_records(db, object_id, q)
-    return records

@@ -26,6 +26,19 @@ GET /api/records/search?object_id=obj_company&q=Acme
 
 ## Response Format
 
+### Response Schema (Array of RecordResponse)
+| Alan | Tip | Açıklama |
+|------|-----|----------|
+| id | string | Record ID (rec_xxxxxxxx) |
+| object_id | string | Object ID |
+| data | object | JSONB field values (key: fld_xxx, value: any) |
+| primary_value | string \| null | Primary display value (searched field) |
+| created_at | string (datetime) | Oluşturulma zamanı |
+| updated_at | string (datetime) | Son güncelleme zamanı |
+| created_by | string | Oluşturan kullanıcı UUID (JSON'da string formatında) |
+| updated_by | string | Güncelleyen kullanıcı UUID (JSON'da string formatında) |
+| tenant_id | string | Tenant UUID (JSON'da string formatında) |
+
 ### Success Response (200 OK)
 ```json
 [
@@ -47,6 +60,18 @@ GET /api/records/search?object_id=obj_company&q=Acme
 ```
 
 **Limit:** Maksimum 50 sonuç döner
+
+## Route Order (Critical)
+
+⚠️ **IMPORTANT:** The `/search` route MUST be defined BEFORE `/{record_id}` in the router, otherwise FastAPI will match `/search` as `/{record_id}` with `record_id="search"`.
+
+**Correct order in router:**
+```python
+# app/routers/records.py
+@router.get("/search")       # Define FIRST
+@router.get("/search/")      # Dual route support
+@router.get("/{record_id}")  # Define AFTER (otherwise /search matches here!)
+```
 
 ## Kod Akışı
 

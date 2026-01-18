@@ -32,6 +32,19 @@ Yeni record oluşturur. JSONB data field'ında dinamik field değerlerini saklar
 
 ## Response Format
 
+### Response Schema (RecordResponse)
+| Alan | Tip | Açıklama |
+|------|-----|----------|
+| id | string | Record ID (rec_xxxxxxxx) |
+| object_id | string | Object ID |
+| data | object | JSONB field values (key: fld_xxx, value: any) |
+| primary_value | string \| null | Primary display value (first text field, max 255 chars) |
+| created_at | string (datetime) | Oluşturulma zamanı |
+| updated_at | string (datetime) | Son güncelleme zamanı |
+| created_by | string | Oluşturan kullanıcı UUID (JSON'da string formatında) |
+| updated_by | string | Güncelleyen kullanıcı UUID (JSON'da string formatında) |
+| tenant_id | string | Tenant UUID (JSON'da string formatında) |
+
 ### Success Response (201 Created)
 ```json
 {

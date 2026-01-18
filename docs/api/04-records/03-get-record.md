@@ -16,6 +16,21 @@ Belirtilen ID'ye sahip record'ı getirir.
 | record_id | string | Record ID (örn: rec_a1b2c3d4) |
 
 ## Response Format
+
+### Response Schema (RecordResponse)
+| Alan | Tip | Açıklama |
+|------|-----|----------|
+| id | string | Record ID (rec_xxxxxxxx) |
+| object_id | string | Object ID |
+| data | object | JSONB field values (key: fld_xxx, value: any) |
+| primary_value | string \| null | Primary display value (first text field, max 255 chars) |
+| created_at | string (datetime) | Oluşturulma zamanı |
+| updated_at | string (datetime) | Son güncelleme zamanı |
+| created_by | string | Oluşturan kullanıcı UUID (JSON'da string formatında) |
+| updated_by | string | Güncelleyen kullanıcı UUID (JSON'da string formatında) |
+| tenant_id | string | Tenant UUID (JSON'da string formatında) |
+
+### Success Response (200 OK)
 ```json
 {
   "id": "rec_a1b2c3d4",

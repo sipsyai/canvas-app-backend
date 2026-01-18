@@ -29,6 +29,21 @@ Record'ı günceller. **JSONB data MERGE edilir** (replace edilmez). Sadece gön
 **DİKKAT:** Sadece gönderilen field'lar güncellenir, diğerleri korunur!
 
 ## Response Format
+
+### Response Schema (RecordResponse)
+| Alan | Tip | Açıklama |
+|------|-----|----------|
+| id | string | Record ID (rec_xxxxxxxx) |
+| object_id | string | Object ID |
+| data | object | JSONB field values (MERGED with update data) |
+| primary_value | string \| null | Primary display value (auto-updated if first field changes) |
+| created_at | string (datetime) | Oluşturulma zamanı (değişmez) |
+| updated_at | string (datetime) | Son güncelleme zamanı (otomatik güncellenir) |
+| created_by | string | Oluşturan kullanıcı UUID (JSON'da string formatında) |
+| updated_by | string | Güncelleyen kullanıcı UUID (JSON'da string formatında) |
+| tenant_id | string | Tenant UUID (JSON'da string formatında) |
+
+### Success Response (200 OK)
 ```json
 {
   "id": "rec_a1b2c3d4",
