@@ -10,7 +10,7 @@ class RelationshipBase(BaseModel):
     name: str = Field(..., min_length=1, max_length=255, description="Relationship name")
     from_object_id: str = Field(..., description="Source object ID")
     to_object_id: str = Field(..., description="Target object ID")
-    type: str = Field(..., pattern="^(1:N|N:N)$", description="Relationship type: 1:N or N:N")
+    type: str = Field(..., pattern="^(1:N|N:N|lookup)$", description="Relationship type: 1:N, N:N, or lookup")
     from_label: str | None = Field(None, description="Label shown on 'from' object")
     to_label: str | None = Field(None, description="Label shown on 'to' object")
 

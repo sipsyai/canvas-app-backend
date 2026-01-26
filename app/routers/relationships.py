@@ -19,7 +19,7 @@ async def create_relationship(
     """
     Create relationship between objects.
 
-    Example: Contact → Opportunities (1:N)
+    Example 1: Contact → Opportunities (1:N)
     ```json
     {
         "name": "contact_opportunities",
@@ -28,6 +28,18 @@ async def create_relationship(
         "type": "1:N",
         "from_label": "Opportunities",
         "to_label": "Contact"
+    }
+    ```
+
+    Example 2: Contact → Company (lookup / N:1)
+    ```json
+    {
+        "name": "contact_company",
+        "from_object_id": "obj_contact",
+        "to_object_id": "obj_company",
+        "type": "lookup",
+        "from_label": "Company",
+        "to_label": "Contacts"
     }
     ```
     """
