@@ -300,8 +300,10 @@ secrets/
 # Misc
 # ----------------------------------------------------------------------------
 
-# Claude Code artifacts (if any)
-.claude/
+# Claude Code artifacts (keep rules/ and skills/ checked in)
+.claude/*
+!.claude/rules/
+!.claude/skills/
 
 # Editor directories and files
 .history/

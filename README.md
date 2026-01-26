@@ -47,10 +47,11 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 **Start here (in this order):**
 
-1. **[BACKEND_ARCHITECTURE_ANALYSIS.md](./BACKEND_ARCHITECTURE_ANALYSIS.md)** - Complete architecture analysis and technology decisions
-2. **[DATABASE_VISUAL_SCHEMA.md](./DATABASE_VISUAL_SCHEMA.md)** - Visual database schema with CRM example
-3. **[BACKEND_PROJECT_SPECIFICATION.md](./BACKEND_PROJECT_SPECIFICATION.md)** - Full API specification and implementation guide
+1. **[Architecture Analysis](./docs/architecture/ANALYSIS.md)** - Complete architecture analysis and technology decisions
+2. **[Database Visual Schema](./docs/database/VISUAL_SCHEMA.md)** - Visual database schema with CRM example
+3. **[API Specification](./docs/api/SPECIFICATION.md)** - Full API specification and implementation guide
 4. **[CLAUDE.md](./CLAUDE.md)** - Development guidelines for Claude Code
+5. **[Development Workflow](./docs/DEVELOPMENT_WORKFLOW.md)** - Common workflows and pitfalls
 
 ## 🏗️ Architecture
 
@@ -142,7 +143,7 @@ PATCH  /api/applications/{id}   # Update application
 DELETE /api/applications/{id}   # Delete application
 ```
 
-See [BACKEND_PROJECT_SPECIFICATION.md](./BACKEND_PROJECT_SPECIFICATION.md) for complete API documentation.
+See [API Specification](./docs/api/SPECIFICATION.md) for complete API documentation.
 
 ## 🧪 Testing
 
@@ -317,8 +318,9 @@ uvicorn app.main:app --log-config logging.json
 
 For questions or issues:
 - Read the documentation in `/docs`
-- Check [BACKEND_PROJECT_SPECIFICATION.md](./BACKEND_PROJECT_SPECIFICATION.md)
+- Check [API Specification](./docs/api/SPECIFICATION.md)
 - Review [CLAUDE.md](./CLAUDE.md) for common patterns
+- See [Development Workflow](./docs/DEVELOPMENT_WORKFLOW.md) for troubleshooting
 
 ---
 
@@ -334,4 +336,4 @@ For questions or issues:
 5. Write tests
 6. Deploy
 
-See [BACKEND_PROJECT_SPECIFICATION.md](./BACKEND_PROJECT_SPECIFICATION.md) Section 12 for detailed development checklist.
+See [API Specification](./docs/api/SPECIFICATION.md) Section 12 for detailed development checklist.
