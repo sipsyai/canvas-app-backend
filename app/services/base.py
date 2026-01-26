@@ -1,7 +1,7 @@
 """Base Service Class - Reusable CRUD operations"""
 from typing import Generic, TypeVar
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import Base
@@ -67,3 +67,10 @@ class BaseService(Generic[ModelType]):
         await db.delete(db_obj)
         await db.commit()
         return True
+
+    async def count_all(self, db: AsyncSession) -> int:
+        """Count all records in the table"""
+        result = await db.execute(
+            select(func.count()).select_from(self.model)
+        )
+        return result.scalar_one()

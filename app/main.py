@@ -9,6 +9,7 @@ from slowapi.errors import RateLimitExceeded
 from app.config import settings
 from app.routers import (
     auth,
+    dashboard,
     fields,
     objects,
     object_fields,
@@ -43,6 +44,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
+app.include_router(dashboard.router, prefix="/api/dashboard", tags=["Dashboard"])
 app.include_router(fields.router, prefix="/api/fields", tags=["Fields"])
 app.include_router(objects.router, prefix="/api/objects", tags=["Objects"])
 app.include_router(object_fields.router, prefix="/api/object-fields", tags=["Object Fields"])

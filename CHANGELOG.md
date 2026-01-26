@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Add `GET /api/dashboard/stats` endpoint for real-time dashboard statistics
+- Add `GET /api/relationships/{relationship_id}` endpoint for single relationship retrieval
+- Add `PATCH /api/relationships/{relationship_id}` endpoint for relationship updates
+- Add `count_all()` method to BaseService for counting records
+
 ## [2026-01-26]
 
 ### Added

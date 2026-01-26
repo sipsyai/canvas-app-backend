@@ -46,6 +46,41 @@ async def create_relationship(
     rel = await relationship_service.create_relationship(db, relationship_in, user_id)
     return rel
 
+@router.get("/{relationship_id}", response_model=RelationshipResponse)
+@router.get("/{relationship_id}/", response_model=RelationshipResponse)
+async def get_relationship(
+    relationship_id: str,
+    db: AsyncSession = Depends(get_db),
+):
+    """Get single relationship by ID"""
+    rel = await relationship_service.get_by_id(db, relationship_id)
+    if not rel:
+        raise HTTPException(status_code=404, detail="Relationship not found")
+    return rel
+
+
+@router.patch("/{relationship_id}", response_model=RelationshipResponse)
+@router.patch("/{relationship_id}/", response_model=RelationshipResponse)
+async def update_relationship(
+    relationship_id: str,
+    relationship_in: RelationshipUpdate,
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Update existing relationship.
+
+    Updatable fields:
+    - from_label
+    - to_label
+    - required
+    - cascade_delete
+    """
+    rel = await relationship_service.update_relationship(db, relationship_id, relationship_in)
+    if not rel:
+        raise HTTPException(status_code=404, detail="Relationship not found")
+    return rel
+
+
 @router.get("/objects/{object_id}", response_model=list[RelationshipResponse])
 @router.get("/objects/{object_id}/", response_model=list[RelationshipResponse])
 async def get_object_relationships(
