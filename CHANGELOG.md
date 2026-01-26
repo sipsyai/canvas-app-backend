@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Simplify CLAUDE.md to essential quick reference information
 - Update .gitignore to track `.claude/skills/` directory
+- Update `/update-docs` skill to use plan mode with 3-phase workflow (analysis → plan → execute)
 
 ### Removed
 - Remove QUICKSTART_AUTH.md (consolidated into other docs)
