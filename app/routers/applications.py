@@ -60,6 +60,20 @@ async def get_application(
     return app
 
 
+@router.patch("/{app_id}", response_model=ApplicationResponse)
+@router.patch("/{app_id}/", response_model=ApplicationResponse)
+async def update_application(
+    app_id: str,
+    app_in: ApplicationUpdate,
+    db: AsyncSession = Depends(get_db),
+):
+    """Update existing application"""
+    app = await application_service.update_application(db, app_id, app_in)
+    if not app:
+        raise HTTPException(status_code=404, detail="Application not found")
+    return app
+
+
 @router.post("/{app_id}/publish", response_model=ApplicationResponse)
 @router.post("/{app_id}/publish/", response_model=ApplicationResponse)
 async def publish_application(
