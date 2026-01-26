@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2026-01-26]
 
 ### Added
+- Add GET `/api/applications/{app_id}` endpoint for retrieving single application
 - Add `lookup` relationship type for N:1 relationships (Contact → Company)
 - Add `/update-docs` Claude Code skill for automated documentation updates (`.claude/skills/update-docs/SKILL.md`)
 - Add CHANGELOG.md with Keep a Changelog format

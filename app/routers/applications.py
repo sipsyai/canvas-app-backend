@@ -46,6 +46,20 @@ async def list_applications(
     apps = await application_service.get_all(db, skip=skip, limit=limit)
     return apps
 
+
+@router.get("/{app_id}", response_model=ApplicationResponse)
+@router.get("/{app_id}/", response_model=ApplicationResponse)
+async def get_application(
+    app_id: str,
+    db: AsyncSession = Depends(get_db),
+):
+    """Get single application by ID"""
+    app = await application_service.get_by_id(db, app_id)
+    if not app:
+        raise HTTPException(status_code=404, detail="Application not found")
+    return app
+
+
 @router.post("/{app_id}/publish", response_model=ApplicationResponse)
 @router.post("/{app_id}/publish/", response_model=ApplicationResponse)
 async def publish_application(
